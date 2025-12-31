@@ -1,136 +1,62 @@
 Meta.DisplayName=Arma 3 Headless Client
-Meta.Description=Arma 3 Headless Client using AMP Generic Module and custom Docker image
+Meta.Description=Standalone Arma 3 Headless Client (HC-only)
 Meta.OS=Linux
 Meta.Arch=x86_64
-Meta.Author=Olivier
-Meta.URL=https://www.bohemia.net/games/arma3
+Meta.Author=Forked from CubeCoders template
 Meta.DisplayImageSource=steam:233780
-Meta.EndpointURIFormat=steam://connect/{ip}:{GenericModule.App.Ports.$GamePort}
+Meta.MinAMPVersion=2.5.0.0
 
 Meta.ConfigManifest=arma3hcconfig.json
 Meta.MetaConfigManifest=arma3hcmetaconfig.json
-Meta.ConfigRoot=arma3hc.kvp
 
-Meta.MinAMPVersion=2.5.0.0
-
-# --- Docker integration (per AMP wiki) ---
-Meta.SpecificDockerImage=ghcr.io/omar130648/arma3hc:ampbase
-Meta.DockerRequired=True
-Meta.ContainerPolicy=Supported
-Meta.ContainerPolicyReason=Uses custom AMP-compatible Arma 3 HC image
-
-Meta.Prerequisites=[]
-Meta.ExtraContainerPackages=[]
-Meta.ConfigReleaseState=NotSpecified
-Meta.NoCommercialUsage=False
+Meta.AppConfigId=6a6b4f90-7a4c-4d2c-b7f7-arma3hc0001
 Meta.ConfigVersion=1
-Meta.AppConfigId=78bee6c2-6072-43aa-8d00-d919def15e0c
-Meta.AppIsMultiIPAware=True
+Meta.AppIsMultiIPAware=False
 
-# --------------------------------------------------
+# HC does not require Docker
+Meta.ContainerPolicy=NotRequired
+
+# -----------------------------
 # Application
-# --------------------------------------------------
+# -----------------------------
 
 App.DisplayName=Arma 3 Headless Client
 
-# AMP instance root is /AMP inside the container
+# AMP root layout
 App.RootDir=./arma3hc/
 App.BaseDirectory=./arma3hc/233780/
 
-# SteamCMD places files in a folder named after the appid
-App.ExecutableLinux=233780/arma3server_x64
-App.WorkingDir=233780
+# We PROMOTE the HC launcher to the main executable
+App.ExecutableLinux=arma3runhc.sh
+App.ExecutableWindows=arma3runhc.ps1
 
-# Startup mirrors your Pterodactyl egg
-App.CommandLineArgs={{STARTUP_PARAMETERS}} -mod="{{MODIFICATIONS}}" -serverMod="{{SERVERMODS}}"
+App.WorkingDir=.
 
-App.UseLinuxIOREDIR=False
+# No server args here. Script builds everything.
+App.CommandLineArgs=
 
-# Settings exposed to AMP UI
-App.AppSettings={
-  "STARTUP_PARAMETERS":"",
-  "MODIFICATIONS":"",
-  "SERVERMODS":""
-}
-
-
-# Minimal environment – Steam handled by UpdateSources
-App.EnvironmentVariables={
-  "SteamAppId":"233780"
-}
-
-App.CommandLineParameterFormat=-{0} "{1}"
-App.CommandLineParameterDelimiter=
-
-# Correct shutdown for Arma
 App.ExitMethod=CtrlC
-App.ExitTimeout=30
-App.ExitString=
+App.ExitTimeout=20
 
-App.HasWriteableConsole=True
+# HC health = console output, not RCON
+App.ApplicationReadyMode=RegexMatch
+Console.AppReadyRegex=(Client connected|Connected to server)
+
 App.HasReadableConsole=True
-App.SupportsLiveSettingsChanges=False
+App.HasWriteableConsole=False
 
-App.ApplicationIPBinding=0.0.0.0
-App.ForceIPBinding=False
-App.SupportsIPv6=False
-
-# --------------------------------------------------
-# Ports
-# --------------------------------------------------
-
-App.Ports=@IncludeJson[arma3hcports.json]
-App.PrimaryApplicationPortRef=GamePort
-App.UniversalSleepApplicationUDPPortRef=GamePort
-App.UniversalSleepSteamQueryPortRef=QueryPort
-App.AdminPortRef=RCONPort
-
-# HC = 1 slot
 App.MaxUsers=1
 
-App.UseRandomAdminPassword=False
-App.PersistRandomPassword=False
-App.RemoteAdminPassword=
-App.AdminMethod=STDIO
+# -----------------------------
+# Ports (none)
+# -----------------------------
 
-# --------------------------------------------------
+App.Ports=@IncludeJson[arma3hcports.json]
+
+# -----------------------------
 # Updates
-# --------------------------------------------------
+# -----------------------------
 
 App.UpdateSources=@IncludeJson[arma3hcupdates.json]
-App.PreStartStages=[]
-App.UserActions=[]
 
-# Steam login is NOT anonymous for Arma 3
-App.SteamUpdateAnonymousLogin=False
-App.SteamForceLoginPrompt=False
-
-App.RapidStartup=False
 App.SupportsUniversalSleep=False
-App.WakeupMode=Any
-
-# --------------------------------------------------
-# Console handling
-# --------------------------------------------------
-
-App.ApplicationReadyMode=RegexMatch
-Console.AppReadyRegex=^.*$
-Console.FilterMatchRegex=
-Console.FilterMatchReplacement=
-Console.ThrowawayMessageRegex=
-Console.UserJoinRegex=
-Console.UserLeaveRegex=
-Console.UserChatRegex=
-Console.UpdateAvailableRegex=
-Console.UserActions={}
-
-# --------------------------------------------------
-# Limits
-# --------------------------------------------------
-
-Limits.SleepMode=False
-Limits.SleepOnStart=False
-Limits.SleepDelayMinutes=5
-Limits.DozeDelay=2
-Limits.AutoRetryCount=2
-Limits.SleepStartThresholdSeconds=25
