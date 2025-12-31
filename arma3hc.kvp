@@ -38,7 +38,7 @@ App.RootDir=./arma3hc/
 App.BaseDirectory=./arma3hc/233780/
 
 # SteamCMD places files in a folder named after the appid
-App.ExecutableLinux=233780/{{ServerBinary}}
+App.ExecutableLinux=233780/arma3server_x64
 App.WorkingDir=233780
 
 # Startup mirrors your Pterodactyl egg
@@ -48,11 +48,11 @@ App.UseLinuxIOREDIR=False
 
 # Settings exposed to AMP UI
 App.AppSettings={
-  "ServerBinary":"arma3server_x64",
   "STARTUP_PARAMETERS":"",
   "MODIFICATIONS":"",
   "SERVERMODS":""
 }
+
 
 # Minimal environment – Steam handled by UpdateSources
 App.EnvironmentVariables={
