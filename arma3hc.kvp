@@ -13,10 +13,6 @@ Meta.AppConfigId=03dbb0ac-c109-446f-8976-2b645a1a7703
 Meta.ConfigVersion=1
 Meta.AppIsMultiIPAware=False
 
-# Docker settings: disable container by default for HC-only
-Meta.DockerRequired=False
-Meta.ContainerPolicy=Unsupported
-Meta.ContainerPolicyReason=Not using container for headless client instances
 # Removed Meta.SpecificDockerImage because container is unsupported
 # -----------------------------
 # Application
