@@ -1,0 +1,49 @@
+[
+  {
+    "DisplayName": "Server Binary",
+    "Description": "Binary to launch. Use arma3server_x64 or arma3server (profiling versions optional).",
+    "FieldName": "SERVER_BINARY",
+    "InputType": "enum",
+    "EnumValues": {
+      "arma3server": "arma3server",
+      "arma3server_x64": "arma3server_x64",
+      "arma3serverprofiling": "arma3serverprofiling",
+      "arma3serverprofiling_x64": "arma3serverprofiling_x64",
+      "arma3client_x64": "arma3client_x64"
+    },
+    "DefaultValue": "arma3server_x64",
+    "ParamFieldName": "serverBinary",
+    "IncludeInCommandLine": false,
+    "IsFlagArgument": false
+  },
+  {
+    "DisplayName": "Startup Parameters",
+    "Description": "Custom startup parameters for the headless client (e.g. -client -connect=IP -port=PORT -password=PASSWORD)",
+    "FieldName": "STARTUP_PARAMETERS",
+    "InputType": "text",
+    "DefaultValue": "",
+    "ParamFieldName": "startParams",
+    "IncludeInCommandLine": false,
+    "IsFlagArgument": false
+  },
+  {
+    "DisplayName": "Modifications",
+    "Description": "Semicolon-separated list of client mods (no spaces)",
+    "FieldName": "MODIFICATIONS",
+    "InputType": "text",
+    "DefaultValue": "",
+    "ParamFieldName": "modifications",
+    "IncludeInCommandLine": false,
+    "IsFlagArgument": false
+  },
+  {
+    "DisplayName": "Server Mods",
+    "Description": "Semicolon-separated list of server-only mods (no spaces)",
+    "FieldName": "SERVERMODS",
+    "InputType": "text",
+    "DefaultValue": "",
+    "ParamFieldName": "serverMods",
+    "IncludeInCommandLine": false,
+    "IsFlagArgument": false
+  }
+]
