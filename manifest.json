@@ -1,9 +1,9 @@
 {
-  "id": "6a6b4f90-7a4c-4d2c-b7f7-arma3hc00001",
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "authors": ["VeitX"],
   "origin": "https://github.com/omar130648/AMP_Arma3_HC.git",
   "url": "https://github.com/omar130648/AMP_Arma3_HC",
   "imagefile": "",
-  "prefix": "",
+  "prefix": "veitx-arma3hc",
   "repotype": "AppTemplates"
 }
