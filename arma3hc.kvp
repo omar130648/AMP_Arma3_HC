@@ -9,7 +9,7 @@ Meta.MinAMPVersion=2.5.0.0
 Meta.ConfigManifest=arma3hcconfig.json
 Meta.MetaConfigManifest=arma3hcmetaconfig.json
 
-Meta.AppConfigId=6a6b4f90-7a4c-4d2c-b7f7-arma3hc0001
+Meta.AppConfigId=6a6b4f90-7a4c-4d2c-b7f7-arma3hc00001
 Meta.ConfigVersion=1
 Meta.AppIsMultiIPAware=False
 
