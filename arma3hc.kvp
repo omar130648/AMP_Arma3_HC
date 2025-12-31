@@ -1,1 +1,136 @@
-Meta.DisplayName=Arma 3 Headless Client Meta.Description=Headless Client instance for Arma 3 using SteamCMD and a custom Docker image Meta.OS=Linux Meta.Arch=x86_64 Meta.Author=Olivier Meta.URL=https://www.bohemia.net/games/arma3 Meta.DisplayImageSource=steam:233780 Meta.EndpointURIFormat=steam://connect/{ip}:{GenericModule.App.Ports.$GamePort} Meta.ConfigManifest=arma3hcconfig.json Meta.MetaConfigManifest=arma3hcmetaconfig.json Meta.ConfigRoot=arma3hc.kvp Meta.MinAMPVersion=2.5.0.0 Meta.SpecificDockerImage=ghcr.io/omar130648/arma3hc:bookworm Meta.DockerRequired=True Meta.ContainerPolicy=Supported Meta.ContainerPolicyReason=Uses custom Arma 3 HC image Meta.Prerequisites=[] Meta.ExtraContainerPackages=[] Meta.ConfigReleaseState=NotSpecified Meta.NoCommercialUsage=False Meta.ConfigVersion=1 Meta.AppConfigId=78bee6c2-6072-43aa-8d00-d919def15e0c Meta.AppIsMultiIPAware=True App.DisplayName=Arma 3 HC App.RootDir=./arma3hc/ App.BaseDirectory=./arma3hc/233780/ App.ExecutableLinux=233780/{ServerBinary} App.WorkingDir=233780 App.CommandLineArgs={STARTUP_PARAMETERS} -mod={MODIFICATIONS} -serverMod={SERVERMODS} App.UseLinuxIOREDIR=False App.AppSettings={"STARTUP_PARAMETERS":"", "MODIFICATIONS":"", "SERVERMODS":"", "ServerBinary":"arma3server_x64"} App.EnvironmentVariables={"SteamAppId":"233780"} App.CommandLineParameterFormat=-{0} "{1}" App.ExitMethod=CtrlC App.ExitTimeout=30 App.ExitString= App.HasWriteableConsole=True App.HasReadableConsole=True App.SupportsLiveSettingsChanges=False App.ApplicationIPBinding=0.0.0.0 App.Ports=@IncludeJson[arma3hcports.json] App.AdminPortRef=RCONPort App.PrimaryApplicationPortRef=GamePort App.UniversalSleepApplicationUDPPortRef=GamePort App.UniversalSleepSteamQueryPortRef=QueryPort App.MaxUsers=1 App.UseRandomAdminPassword=False App.PersistRandomPassword=False App.RemoteAdminPassword= App.AdminMethod=STDIO App.UpdateSources=@IncludeJson[arma3hcupdates.json] App.PreStartStages=[] App.UserActions=[] App.Compatibility=LinuxBufferedConsole App.SteamUpdateAnonymousLogin=False App.SteamForceLoginPrompt=False App.RapidStartup=False App.SupportsUniversalSleep=False App.WakeupMode=Any App.ApplicationReadyMode=RegexMatch Console.FilterMatchRegex= Console.FilterMatchReplacement= Console.ThrowawayMessageRegex= Console.AppReadyRegex=^.*$ Console.UserJoinRegex= Console.UserLeaveRegex= Console.UserChatRegex= Console.UpdateAvailableRegex= Console.UserActions={} Limits.SleepMode=False Limits.SleepOnStart=False Limits.SleepDelayMinutes=5 Limits.DozeDelay=2 Limits.AutoRetryCount=2 Limits.SleepStartThresholdSeconds=25
+Meta.DisplayName=Arma 3 Headless Client
+Meta.Description=Arma 3 Headless Client using AMP Generic Module and custom Docker image
+Meta.OS=Linux
+Meta.Arch=x86_64
+Meta.Author=Olivier
+Meta.URL=https://www.bohemia.net/games/arma3
+Meta.DisplayImageSource=steam:233780
+Meta.EndpointURIFormat=steam://connect/{ip}:{GenericModule.App.Ports.$GamePort}
+
+Meta.ConfigManifest=arma3hcconfig.json
+Meta.MetaConfigManifest=arma3hcmetaconfig.json
+Meta.ConfigRoot=arma3hc.kvp
+
+Meta.MinAMPVersion=2.5.0.0
+
+# --- Docker integration (per AMP wiki) ---
+Meta.SpecificDockerImage=ghcr.io/omar130648/arma3hc:ampbase
+Meta.DockerRequired=True
+Meta.ContainerPolicy=Supported
+Meta.ContainerPolicyReason=Uses custom AMP-compatible Arma 3 HC image
+
+Meta.Prerequisites=[]
+Meta.ExtraContainerPackages=[]
+Meta.ConfigReleaseState=NotSpecified
+Meta.NoCommercialUsage=False
+Meta.ConfigVersion=1
+Meta.AppConfigId=78bee6c2-6072-43aa-8d00-d919def15e0c
+Meta.AppIsMultiIPAware=True
+
+# --------------------------------------------------
+# Application
+# --------------------------------------------------
+
+App.DisplayName=Arma 3 Headless Client
+
+# AMP instance root is /AMP inside the container
+App.RootDir=./arma3hc/
+App.BaseDirectory=./arma3hc/233780/
+
+# SteamCMD places files in a folder named after the appid
+App.ExecutableLinux=233780/{{ServerBinary}}
+App.WorkingDir=233780
+
+# Startup mirrors your Pterodactyl egg
+App.CommandLineArgs={{STARTUP_PARAMETERS}} -mod="{{MODIFICATIONS}}" -serverMod="{{SERVERMODS}}"
+
+App.UseLinuxIOREDIR=False
+
+# Settings exposed to AMP UI
+App.AppSettings={
+  "ServerBinary":"arma3server_x64",
+  "STARTUP_PARAMETERS":"",
+  "MODIFICATIONS":"",
+  "SERVERMODS":""
+}
+
+# Minimal environment – Steam handled by UpdateSources
+App.EnvironmentVariables={
+  "SteamAppId":"233780"
+}
+
+App.CommandLineParameterFormat=-{0} "{1}"
+App.CommandLineParameterDelimiter=
+
+# Correct shutdown for Arma
+App.ExitMethod=CtrlC
+App.ExitTimeout=30
+App.ExitString=
+
+App.HasWriteableConsole=True
+App.HasReadableConsole=True
+App.SupportsLiveSettingsChanges=False
+
+App.ApplicationIPBinding=0.0.0.0
+App.ForceIPBinding=False
+App.SupportsIPv6=False
+
+# --------------------------------------------------
+# Ports
+# --------------------------------------------------
+
+App.Ports=@IncludeJson[arma3hcports.json]
+App.PrimaryApplicationPortRef=GamePort
+App.UniversalSleepApplicationUDPPortRef=GamePort
+App.UniversalSleepSteamQueryPortRef=QueryPort
+App.AdminPortRef=RCONPort
+
+# HC = 1 slot
+App.MaxUsers=1
+
+App.UseRandomAdminPassword=False
+App.PersistRandomPassword=False
+App.RemoteAdminPassword=
+App.AdminMethod=STDIO
+
+# --------------------------------------------------
+# Updates
+# --------------------------------------------------
+
+App.UpdateSources=@IncludeJson[arma3hcupdates.json]
+App.PreStartStages=[]
+App.UserActions=[]
+
+# Steam login is NOT anonymous for Arma 3
+App.SteamUpdateAnonymousLogin=False
+App.SteamForceLoginPrompt=False
+
+App.RapidStartup=False
+App.SupportsUniversalSleep=False
+App.WakeupMode=Any
+
+# --------------------------------------------------
+# Console handling
+# --------------------------------------------------
+
+App.ApplicationReadyMode=RegexMatch
+Console.AppReadyRegex=^.*$
+Console.FilterMatchRegex=
+Console.FilterMatchReplacement=
+Console.ThrowawayMessageRegex=
+Console.UserJoinRegex=
+Console.UserLeaveRegex=
+Console.UserChatRegex=
+Console.UpdateAvailableRegex=
+Console.UserActions={}
+
+# --------------------------------------------------
+# Limits
+# --------------------------------------------------
+
+Limits.SleepMode=False
+Limits.SleepOnStart=False
+Limits.SleepDelayMinutes=5
+Limits.DozeDelay=2
+Limits.AutoRetryCount=2
+Limits.SleepStartThresholdSeconds=25
