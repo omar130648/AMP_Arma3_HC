@@ -1,55 +1,53 @@
-# Arma 3 Headless Client launcher (HC-only)
-# AMP foreground process – DO NOT background or loop
+# Arguments: [number_clients] [server_binding] [server_port] "<server_password>" "<mod_list>" "<hc_parameters_file>" [start_limit]
 
-$ErrorActionPreference = "Stop"
+# Check if any headless clients are to be run
+# If none, immediately exit
+if ($args[0] -eq "0") { exit }
 
-# Read environment variables injected by AMP
-$ServerIP   = $env:HC_SERVER_IP
-$ServerPort = $env:HC_SERVER_PORT
-$ClientMods = $env:CLIENT_MODS
-$CDLC       = $env:CDLC
-$ExtraArgs  = $env:HC_EXTRA_ARGS
+# Check if server starts successfully within <start_limit> seconds
+# If not, exit
+$serverStarted = $false
+if ($args.Length -lt 7) { 
+    $startlimit = 180
+} else {
+    $startlimit = $args[6]
+}
+for ($i = 1; $i -le [int]$startlimit; $i++) {
+  if (Get-NetUDPEndpoint -LocalPort $args[2] -ErrorAction SilentlyContinue) {
+    $serverStarted = $true
+    break
+  }
+  Start-Sleep -Seconds 1
+}
+if (-not $serverStarted) { exit 1 }
 
-# Sanity checks (fail fast, fail loud)
-if ([string]::IsNullOrWhiteSpace($ServerIP)) {
-    Write-Error "HC_SERVER_IP is not set"
+# Start the headless clients
+$clients = @()
+$basePort = [int]$args[2] + 498
+if ($args.Length -lt 6) { 
+    $parfile = ""
+} else {
+    $parfile = $args[5]
+}
+cd "$PSScriptRoot\arma3\233780"
+for ($i = 1; $i -le [int]$args[0]; $i++) {
+  if ($args[1] -eq "0.0.0.0") {
+    $connect = "127.0.0.1"
+  } else {
+    $connect = $args[1]
+  }
+  $hcProcess = Start-Process -FilePath "ArmA3Server_x64.exe" -ArgumentList "-client", "-nosound", "-profiles=A3Master", "-connect=${connect}:$($args[2])", "-port=$basePort", "-password=`"$($args[3])`"", "`"-mod=$($args[4])`"", "`"-par=$parfile`"" -WindowStyle Hidden -PassThru
+  $clients += $hcProcess.Id
 }
 
-if ([string]::IsNullOrWhiteSpace($ServerPort)) {
-    Write-Error "HC_SERVER_PORT is not set"
+# Monitor server process and terminate headless clients
+# when server terminates
+while ($true) {
+  if (-not (Get-NetUDPEndpoint -LocalPort $args[2] -ErrorAction SilentlyContinue)) {
+    foreach ($processId in $clients) {
+      Stop-Process -Id $processId -Force
+    }
+    exit 0
+  }
+  Start-Sleep -Seconds 1
 }
-
-# Move to Arma directory
-Set-Location "arma3hc\233780"
-
-# Build argument list
-$Args = @(
-    "-client"
-    "-connect=$ServerIP"
-    "-port=$ServerPort"
-)
-
-if (![string]::IsNullOrWhiteSpace($ClientMods)) {
-    $Args += "-mod=$ClientMods"
-}
-
-if (![string]::IsNullOrWhiteSpace($CDLC)) {
-    $Args += "-cdlc=$CDLC"
-}
-
-if (![string]::IsNullOrWhiteSpace($ExtraArgs)) {
-    $Args += $ExtraArgs
-}
-
-# Log what we are doing (AMP console visibility)
-Write-Host "Starting Arma 3 Headless Client"
-Write-Host "Executable: arma3server_x64.exe"
-Write-Host "Arguments : $($Args -join ' ')"
-
-# Launch HC in foreground
-# -Wait is CRITICAL so AMP owns the lifecycle
-Start-Process `
-    -FilePath ".\arma3server_x64.exe" `
-    -ArgumentList $Args `
-    -Wait `
-    -NoNewWindow
