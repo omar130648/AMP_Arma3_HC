@@ -31,7 +31,7 @@ App.ExecutableLinux=233780/arma3server{{ServerExecutable}}
 App.WorkingDir=233780
 App.LinuxCommandLineArgs=
 App.WindowsCommandLineArgs=
-App.CommandLineArgs={{$PlatformArgs}} -client -connect={{ServerIP}} "-port "{{ServerPort}} {{autoInit}}{{$FormattedArgs}} {{parfile}}{{CustomServerArgs}}
+App.CommandLineArgs={{$PlatformArgs}} -client -connect={{ServerIP}} -port {{ServerPort}} {{autoInit}}{{$FormattedArgs}} {{parfile}}{{CustomServerArgs}}
 App.UseLinuxIOREDIR=False
 App.AppSettings={}
 App.EnvironmentVariables={"LD_LIBRARY_PATH":"{{$FullRootDir}}linux:%LD_LIBRARY_PATH%","SteamAppId":"107410"}
